@@ -11,6 +11,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
+
 const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
@@ -46,9 +50,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: utils.assetsPath('css/[name].[contenthash].css'),
       // Setting the following option to `false` will not extract CSS from codesplit chunks.
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`, 
       // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
-      allChunks: true,
+      allChunks: false,
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
@@ -64,6 +67,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: config.build.index,
       template: 'index.html',
       inject: true,
+      favicon: resolve('log.ico'),
+      title: 'nx-admin',
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -74,7 +79,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     }),
-    // keep module.id stable when vendor modules does not change
+    // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
@@ -108,6 +113,30 @@ const webpackConfig = merge(baseWebpackConfig, {
       minChunks: 3
     }),
 
+    // split echarts into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'echarts',
+      minChunks(module) {
+        var context = module.context;
+        return context && (context.indexOf('echarts') >= 0 || context.indexOf('zrender') >= 0);
+      }
+    }),
+    // split xlsx into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'xlsx',
+      minChunks(module) {
+        var context = module.context;
+        return context && (context.indexOf('xlsx') >= 0);
+      }
+    }),
+    // split codemirror into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'codemirror',
+      minChunks(module) {
+        var context = module.context;
+        return context && (context.indexOf('codemirror') >= 0);
+      }
+    }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {
@@ -118,6 +147,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     ])
   ]
 })
+
+
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin')
