@@ -10,6 +10,7 @@ for (let i = 0; i < count; i++) {
     name: Mock.Random.cname(),
     addr: Mock.mock('@county(true)'),
     'age|18-60': 1,
+    email: Mock.mock('@email'),
     birth: Mock.Random.date(),
     sex: Mock.Random.integer(0, 1)
   }))
@@ -35,12 +36,14 @@ export default {
     }
   },
   createUser: config => {
-    const { id, name, addr, age, birth, sex } = param2Obj(config.url)
+    const { id, name, password, addr, email, age, birth, sex } = param2Obj(config.url)
     console.log('66')
     List.push({
       id: id,
       name: name,
+      password: password,
       addr: addr,
+      email: email,
       age: age,
       birth: birth,
       sex: sex
@@ -74,12 +77,14 @@ export default {
     }
   },
   updateUser: config => {
-    const { id, name, addr, age, birth, sex } = param2Obj(config.url)
+    const { id, name, password, addr, email, age, birth, sex } = param2Obj(config.url)
     const sex_num = parseInt(sex)
     List.some(u => {
       if (u.id === id) {
         u.name = name
+        u.password = password
         u.addr = addr
+        u.email = email
         u.age = age
         u.birth = birth
         u.sex = sex_num

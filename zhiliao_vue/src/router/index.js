@@ -59,6 +59,31 @@ export const constantRouterMap = [
       }
     ]
   },
+  // 用户
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/sysUser',
+    name: 'user',
+    meta: {
+      title: 'user',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: 'sysUser',
+        name: 'sysUser',
+        component: () => import('@/views/user/sysUser'),
+        meta: { title: 'sysUser', icon: 'sysUser' }
+      },
+      {
+        path: 'sysRole',
+        name: 'sysRole',
+        component: () => import('@/views/user/sysRole'),
+        meta: { title: 'sysRole', icon: 'sysRole' }
+      }
+    ]
+  },
   // 图表
   {
     path: '/charts',

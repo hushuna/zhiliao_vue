@@ -86,7 +86,10 @@ export default {
     roadBookMap: 'roadBookMap',
     cityLlistMap: 'cityLlistMap',
     baidumap: 'baidumap',
-    gpsMap: 'gpsMap'
+    gpsMap: 'gpsMap',
+    user: 'user',
+    sysUser: 'sysUser',
+    sysRole: 'sysRole'
   },
   excel: {
     export: 'Export',
